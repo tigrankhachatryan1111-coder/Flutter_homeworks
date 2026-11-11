@@ -7,14 +7,14 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Իմ էջը'),
+        title: Center(child: const Text('Իմ էջը')),
       ),
       body: Center(
         child: const Text(
           'Բարև, ես Տիգրանն եմ',
           style: const TextStyle(
             fontSize: 24,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
