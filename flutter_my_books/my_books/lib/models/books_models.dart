@@ -2,9 +2,9 @@ class BookModels {
   final String id;
   final String title;
   final String author;
-  final String genre; // Обычная строка вместо enum
+  final String genre;
   bool isRead;
-  int rating; // 0-ից 5
+  int rating;
 
   BookModels({
     required this.id,
