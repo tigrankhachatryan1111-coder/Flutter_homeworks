@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_books/models/books_models.dart';
-import '../models/books_initial.dart';
+import '../models/book.dart';
+import '../data/books_initial.dart';
 import '../widgets/book_tile.dart';
 import 'book_details_screen.dart';
 
@@ -12,26 +12,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<BookModels> books = List.from(booksInitial);
+  final List<Book> books = List.from(booksInitial);
   final TextEditingController searchController = TextEditingController();
 
   String searchQuery = '';
-  String selectedGenre = 'Բոլորը';
-
-  final List<String> genres = [
-    'Բոլորը',
-    'Վեպ',
-    'Պատմություն',
-    'Ֆանտաստիկա',
-    'Բանաստեղծություն',
-  ];
+  Genre selectedGenre = Genre.all;
 
   int get readCount => books.where((b) => b.isRead).length;
 
-  List<BookModels> get filteredBooks {
+  List<Book> get filteredBooks {
     return books.where((book) {
       final matchesGenre =
-          selectedGenre == 'Բոլորը' || book.genre == selectedGenre;
+          selectedGenre == Genre.all || book.genre == selectedGenre;
       final query = searchQuery.toLowerCase();
       final matchesSearch = book.title.toLowerCase().contains(query) ||
           book.author.toLowerCase().contains(query);
@@ -46,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  void deleteBook(BookModels book) {
+  void deleteBook(Book book) {
     final int deletedIndex = books.indexOf(book);
 
     setState(() {
@@ -69,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> openDetails(BookModels book) async {
+  Future<void> openDetails(Book book) async {
     final result = await Navigator.push<int>(
       context,
       MaterialPageRoute(
@@ -91,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Իմ գրքերը (${readCount} / ${books.length})'),
+        title: Text('Իմ գրքերը ($readCount / ${books.length})'),
       ),
       body: Column(
         children: [
@@ -108,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () {
                           searchController.clear();
                           setState(() {
+                            searchQuery = ''; // Пункт 3: Исправлен сброс searchQuery
                           });
                         },
                       )
@@ -129,12 +122,12 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListView.separated(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               scrollDirection: Axis.horizontal,
-              itemCount: genres.length,
+              itemCount: Genre.values.length,
               separatorBuilder: (_, __) => const SizedBox(width: 8),
               itemBuilder: (context, index) {
-                final genre = genres[index];
+                final genre = Genre.values[index];
                 return ChoiceChip(
-                  label: Text(genre),
+                  label: Text(genre.label),
                   selected: selectedGenre == genre,
                   onSelected: (selected) {
                     if (selected) {

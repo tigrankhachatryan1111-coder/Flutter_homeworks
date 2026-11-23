@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:my_books/models/books_models.dart';
+import 'package:my_books/widgets/star_rating_widget.dart';
+import '../models/book.dart';
 
 class BookDetailsScreen extends StatefulWidget {
-  final BookModels book;
+  final Book book;
 
   const BookDetailsScreen({super.key, required this.book});
 
@@ -21,6 +22,9 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Пункт 8: Проверка, выбрана ли оценка (должна быть > 0)
+    bool canSave = selectedRating > 0;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Գրքի մասին'),
@@ -41,7 +45,7 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Ժանր՝ ${widget.book.genre}',
+              'Ժանր՝ ${widget.book.genre.label}',
               style: const TextStyle(fontSize: 16, color: Colors.black54),
             ),
             const Divider(height: 40),
@@ -50,31 +54,27 @@ class _BookDetailsScreenState extends State<BookDetailsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 12),
-            Row(
-              children: List.generate(5, (index) {
-                int starNumber = index + 1;
-                return IconButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedRating = starNumber;
-                    });
-                  },
-                  icon: Icon(
-                    starNumber <= selectedRating ? Icons.star : Icons.star_border,
-                    color: Colors.amber,
-                    size: 36,
-                  ),
-                );
-              }),
+            // Пункт 6: Используем общий виджет StarRating с возможностью выбора
+            StarRating(
+              rating: selectedRating,
+              size: 36,
+              onRatingChanged: (newRating) {
+                setState(() {
+                  selectedRating = newRating;
+                });
+              },
             ),
             const Spacer(),
             SizedBox(
               width: double.infinity,
               height: 48,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, selectedRating);
-                },
+                // Пункт 8: Если оценка не выбрана (0), кнопка отключена (null)
+                onPressed: canSave
+                    ? () {
+                        Navigator.pop(context, selectedRating);
+                      }
+                    : null,
                 child: const Text(
                   'Պահպանել',
                   style: TextStyle(fontSize: 16),

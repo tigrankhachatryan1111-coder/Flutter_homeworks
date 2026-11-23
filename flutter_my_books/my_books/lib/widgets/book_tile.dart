@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:my_books/models/books_models.dart';
+import 'package:my_books/widgets/star_rating_widget.dart';
+import '../models/book.dart';
 
 class BookTile extends StatelessWidget {
-  final BookModels book;
+  final Book book;
   final ValueChanged<bool?> onCheckboxChanged;
   final VoidCallback onTap;
 
@@ -25,27 +26,23 @@ class BookTile extends StatelessWidget {
         book.title,
         style: TextStyle(
           fontWeight: FontWeight.w600,
+          // Пункт 2: Название прочитанной книги зачеркивается
+          decoration: book.isRead ? TextDecoration.lineThrough : null,
+          color: book.isRead ? Colors.grey : Colors.black87,
         ),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('${book.author} , ${book.genre}'),
+          Text('${book.author} • ${book.genre.label}'),
           if (book.rating > 0)
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Row(
-                children: List.generate(5, (index) {
-                  return Icon(
-                    index < book.rating ? Icons.star : Icons.star_border,
-                    color: Colors.amber,
-                    size: 16,
-                  );
-                }),
-              ),
+              child: StarRating(rating: book.rating, size: 16), // Пункт 6
             ),
         ],
       ),
+      trailing: const Icon(Icons.chevron_right),
     );
   }
 }
