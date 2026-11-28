@@ -14,7 +14,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final FakeRecipeRepository _repository = FakeRecipeRepository();
   late Future<List<Recipe>> _recipesFuture;
 
-  // null նշանակում է «Բոլորը»
   Difficulty? _selectedDifficulty;
 
   @override
@@ -37,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       await newFuture;
     } catch (_) {
-      // Սխալի դեպքում FutureBuilder-ը ինքը կցուցադրի error վիճակը
+      
     }
   }
 

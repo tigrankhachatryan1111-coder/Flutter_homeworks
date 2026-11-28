@@ -8,7 +8,6 @@ class FakeRecipeRepository {
   Future<List<Recipe>> fetchRecipes() async {
     await Future.delayed(const Duration(seconds: 2));
 
-    // 3 դեպքից 1-ում (0, 1, 2 -> երբ 0 է) նետում է սխալ
     if (random.nextInt(3) == 0) {
       throw Exception('Չհաջողվեց բեռնել բաղադրատոմսերը');
     }
